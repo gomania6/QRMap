@@ -1,0 +1,13 @@
+name: QRMap
+version: 1.0
+main: com.gomania.qrmap.QRMap
+api-version: 1.21
+commands:
+  qrmap:
+    description: Управление QR-картами
+    usage: /qrmap <create/open>
+    permission: qrmap.use
+permissions:
+  qrmap.use:
+    description: Allows using QRMap
+    default: true
