@@ -1,108 +1,64 @@
-## **QRMap – Full Plugin Functionality**
+# QRMap
 
-### 1. **QR Map Creation**
+QRMap is a Minecraft plugin for Paper/Spigot that allows players to generate QR codes and display them on in-game maps. It features a user-friendly GUI, pagination, and persistent storage using a simple database system.
 
-* Command: `/qrmap [URL]`
+## Features
 
-  * If a URL is provided, the plugin generates a QR code for it and places it on a map in the player’s inventory.
-  * If no URL is given, the GUI opens, showing all previously created QR maps.
+* Generate QR codes directly in Minecraft.
+* Display QR code maps in a paginated GUI.
+* Take QR maps (left-click) or delete them (right-click) in GUI.
+* QR maps are stored by unique IDs to prevent naming issues.
+* API support to give QR maps to players programmatically.
+* Permissions system to control who can generate QR maps.
 
-* Each map includes:
-
-  * A scannable QR code.
-  * Map name — the domain of the URL (e.g., `www.youtube.com`).
-
-* **Server-side saving:**
-
-  * All maps are stored in `plugins/QRMap/maps` as PNG files.
-  * File names are sanitized automatically to remove forbidden characters (`:`, `/`, `?`, etc.).
-
----
-
-### 2. **GUI for Viewing Maps**
-
-* Players can open the GUI without arguments using `/qrmap`.
-* Interface features:
-
-  * 54-slot inventory (9x6), slots 45 and 53 are arrows for pagination.
-  * Map slots (0-44 and 46-52) display the maps with:
-
-    * `§aTake (Left Click)`
-    * `§cDelete (Right Click)`
-  * Pagination:
-
-    * Clicking arrows changes the page.
-    * Supports more than 54 maps.
-
----
-
-### 3. **Interacting with Maps**
-
-* **Left Click (LMB) on a map:**
-
-  * Adds a copy of the map to the player’s inventory.
-  * Requires OP permissions to take maps.
-* **Right Click (RMB) on a map:**
-
-  * Deletes the map from the server (`maps/*.png`).
-  * GUI updates automatically after deletion.
-
----
-
-### 4. **QRMap API**
-
-* The plugin provides an **API** for other plugins:
-
-```java
-QRMapAPI.giveQRMap(player, "https://example.com", "example.com");
-```
-
-* Allows programmatically giving QR maps to players without using commands.
-
----
-
-### 5. **Technical Details**
-
-* QR codes are generated using ZXing (`QRCodeWriter`).
-* Maps use `MapView` and `MapRenderer`.
-* Supports saving QR maps as PNG files for reuse.
-* Uses `PersistentDataContainer` to store the original URL in the map.
-
----
-
-### 6. **Additional Features**
-
-* Automatic URL processing:
-
-  * GUI and map display only the domain for clarity.
-  * When taking a map via LMB or using the API, the full URL is preserved.
-* Compatible with Paper/Spigot API 1.21.
-* Multi-page GUI for large numbers of maps.
-
----
-
-### 7. **Example Use Cases**
-
-1. Player creates a QR map:
-
-```
-/qrmap https://www.youtube.com/watch?v=abcd
-```
-
-→ QR map appears in inventory; file saved as `plugins/QRMap/maps/www.youtube.com.png`.
-
-2. Player opens the GUI:
+## Commands
 
 ```
 /qrmap
 ```
 
-→ GUI displays all maps with buttons "Take" (LMB) and "Delete" (RMB), with arrows for page navigation.
+* Opens the QRMap GUI if used without arguments.
+* `/qrmap <text>` generates a new QR map with the specified text/URL and adds it to your inventory.
 
-3. Another plugin gives a QR map to a player:
+**Permissions:**
+
+* `qrmap.use` – required to open GUI or generate maps.
+
+## GUI Usage
+
+* **Left-click (🖱️ LMB):** Take the map (requires OP).
+* **Right-click (🖱️ RMB):** Delete the map.
+* **Arrows:** Navigate between pages.
+
+## API Usage
+
+You can give QR maps to players programmatically:
 
 ```java
-QRMapAPI.giveQRMap(player, "https://example.com", "example.com");
+QRMapAPI.giveQRMap(player, "https://example.com", "Example Map");
 ```
 
-→ Player receives the map directly in inventory without a command.
+This will generate a new map, save it in the database, and give it to the player.
+
+## Installation
+
+1. Place `QRMap.jar` in your `plugins` folder.
+2. Start the server.
+3. Ensure the plugin created its data folder (`plugins/QRMap`) and database.
+
+## Database
+
+* QRMap uses a simple file-based database (or you can switch to SQLite/MySQL) to store map data by unique IDs.
+* Each map stores:
+
+  * ID
+  * QR text (URL or custom text)
+  * Display name
+
+## Compatibility
+
+* Minecraft 1.21+ (Paper/Spigot)
+
+## License
+
+MIT License. Free to use and modify.
